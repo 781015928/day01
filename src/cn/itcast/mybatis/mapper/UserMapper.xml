@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.itcast.mybatis.mapper.UserMapper">
+
+
+    <!--sql 语句
+    id statement id
+    sql 语句会封装到mappedStatement 对象中
+    -->
+    <select id="findUserById"
+            parameterType="int"
+            resultType="user"
+    >
+        SELECT *
+        FROM USER
+        WHERE id = #{id}
+    </select>
+    <select id="findAll"
+            resultType="user"
+    >
+        SELECT *
+        FROM USER
+    </select>
+
+    <select id="findUserByName"
+            parameterType="string"
+            resultType="user"
+    >
+        SELECT *
+        FROM USER
+        WHERE username LIKE '%${value}%'
+
+    </select>
+
+    <insert id="insertUser"
+            parameterType="user"
+    >
+        <selectKey keyProperty="id"
+                   order="AFTER"
+                   resultType="java.lang.Integer"
+        >
+            SELECT LAST_INSERT_ID()
+
+        </selectKey>
+        insert into user( username, birthday, sex,address )value(
+        #{username},#{birthday},#{sex},#{address}
+        )
+    </insert>
+    <update id="updateUserById"
+            parameterType="user"
+    >
+        UPDATE user
+        SET
+        username = #{username},
+        birthday = #{birthday},
+        sex      = #{sex},
+        address  = #{address}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserById"
+            parameterType="int"
+    >
+        DELETE FROM user
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findUserList"
+            parameterType="userQueryVo"
+    resultType="userCustom"
+    >
+        SELECT * from USER WHERE  user.sex = #{userCustom.sex} and user.name like '%${userCustom.name}%'
+    </select>
+</mapper>
